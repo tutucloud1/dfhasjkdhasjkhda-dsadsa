@@ -1,19 +1,22 @@
+mkdir -p /opt/hysteria-server
 mkdir -p /opt/hysteria-server/certs/live/tutucloud.shop
 
-curl -L https://raw.githubusercontent.com/tutucloud1/dfhasjkdhasjkhda-dsadsa/main/fullchain.pem -o /opt/hysteria-server/certs/live/tutucloud.shop/fullchain.pem
-curl -L https://raw.githubusercontent.com/tutucloud1/dfhasjkdhasjkhda-dsadsa/main/privkey.pem -o /opt/hysteria-server/certs/live/tutucloud.shop/privkey.pem
 
 curl -o /opt/hysteria-server/docker-compose.yml https://o.oo0o.ooo/scripts/installment/tutu/docker-compose.yml 
 curl -o /opt/hysteria-server/cloudflare.ini https://o.oo0o.ooo/scripts/installment/tutu/cloudflare.ini 
 curl -o /opt/hysteria-server/server.yaml https://o.oo0o.ooo/scripts/installment/tutu/server.yaml 
 
-sed -i 's/restart: unless-stopped/restart: "no"/' /opt/hysteria-server/docker-compose.yml
 
-sed -i '/certonly/,/-d \*.tutusub.xyz/ s/^/# /' /opt/hysteria-server/docker-compose.yml
+curl -L https://raw.githubusercontent.com/tutucloud1/dfhasjkdhasjkhda-dsadsa/main/fullchain.pem -o /opt/hysteria-server/certs/live/tutucloud.shop/fullchain.pem
+curl -L https://raw.githubusercontent.com/tutucloud1/dfhasjkdhasjkhda-dsadsa/main/privkey.pem -o /opt/hysteria-server/certs/live/tutucloud.shop/privkey.pem
 
-sed -i '/# -d \*.tutusub.xyz/a\    command: /bin/true' /opt/hysteria-server/docker-compose.yml
 
-sed -i '/certbot_etc/a\      - ./certs/live:/etc/letsencrypt/live' /opt/hysteria-server/docker-compose.yml
+chmod 644 /opt/hysteria-server/certs/live/tutucloud.shop/fullchain.pem
+chmod 644 /opt/hysteria-server/certs/live/tutucloud.shop/privkey.pem
+
+mkdir -p /var/lib/docker/volumes/opt_hysteria-server_certbot_etc/_data/live/tutucloud.shop/
+ln -sf /opt/hysteria-server/certs/live/tutucloud.shop/fullchain.pem /var/lib/docker/volumes/opt_hysteria-server_certbot_etc/_data/live/tutucloud.shop/fullchain.pem
+ln -sf /opt/hysteria-server/certs/live/tutucloud.shop/privkey.pem /var/lib/docker/volumes/opt_hysteria-server_certbot_etc/_data/live/tutucloud.shop/privkey.pem
 
 docker compose -f /opt/hysteria-server/docker-compose.yml up -d hysteria
 
